@@ -4,14 +4,19 @@
 	<meta charset="UTF-8">
 	<title></title>
 </head>
+<style>
+    .offset{
+        height:100px;
+    }
+</style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular.min.js"></script>
 <script src="app-module.js"></script>
 <script src="users-controller.js"></script>
 <script src="tk-repeat.js"></script>
 <body>
-<div style="background: gray;margin-top: 100px;height: 400px;width: 250px;overflow: auto;" list-view="l in vm.list">
-    <div style="margin: 25px;background: lightblue;">
+<div style="background: gray;margin-top: 50px;height: 300px;width: 250px;overflow: auto;" list-view="l in vm.list">
+    <div class="tk-template" style="padding: 25px;">
         {{l.num}}
     </div>
 </div>
