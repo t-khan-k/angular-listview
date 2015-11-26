@@ -14,11 +14,10 @@ angular.module('app').directive('listView',function($compile){
 			insertElements(data,template);
 
 			function insertElements(data,template){
-				for(var i=0;i<data.length;i++){
+				for(var i=0,len=data.length;i<len;i++){
 					var el = angular.element(template);
 					var childScope = createChildScope(child,data[i]);
-					//$compile(el)(childScope).insertBefore(elem);
-					elem.append($compile(el)(childScope))
+					elem.append($compile(el)(childScope));
 				}
 			}
 

@@ -10,14 +10,10 @@
 <script src="users-controller.js"></script>
 <script src="tk-repeat.js"></script>
 <body>
-<div list-view="l in vm.list">
-	<div>
-		<ul>
-			<li>{{l.name}}</li>
-			<li>{{l.age}}</li>
-		</ul>
-		<input type="text"/>
-	</div>
+<div style="background: gray;margin-top: 100px;height: 400px;width: 250px;overflow: auto;" list-view="l in vm.list">
+    <div style="margin: 25px;background: lightblue;">
+        {{l.num}}
+    </div>
 </div>
 </body>
 </html>
