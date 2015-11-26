@@ -10,14 +10,11 @@
 <script src="users-controller.js"></script>
 <script src="tk-repeat.js"></script>
 <body>
-<div ng-repeat="l in vm.list">
-	{{l}}
-</div>
 <div list-view="l in vm.list">
 	<div>
 		<ul>
-			<li>{{name}}</li>
-			<li>{{age}}</li>
+			<li>{{l.name}}</li>
+			<li>{{l.age}}</li>
 		</ul>
 		<input type="text"/>
 	</div>
