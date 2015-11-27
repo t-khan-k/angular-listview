@@ -1,21 +1,20 @@
-
-angular.module("app").controller('DemoController',['$timeout',UsersController]);
+angular.module("app").controller('DemoController', ['$timeout', UsersController]);
 
 function UsersController($timeout){
-	var vm = this;
-	vm.list = getNumbers(100);
+    var vm = this;
+    vm.list = getNumbers(100);
 
-	function getNumbers(n){
-		var arr = [];
-		for(var i=0;i<n;i++){
-			arr.push({num: i});
-		}
-		return arr;
-	}
+    function getNumbers(n){
+        var arr = [];
+        for(var i = 0; i < n; i++){
+            arr.push({num: i});
+        }
+        return arr;
+    }
 
-    vm.clicker = function(item,index){
-        console.log("index: "+index+", value: "+item.num);
-        alert("index: "+index+", value: "+item.num);
+    vm.clicker = function(item, index){
+        console.log("index: " + index + ", value: " + item.num);
+        alert("index: " + index + ", value: " + item.num);
     };
 
     vm.push = function(){
