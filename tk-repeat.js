@@ -30,9 +30,11 @@ angular.module('app').directive('tkRepeat',function($compile){
 
 			scope.$watchCollection(function(sc) {return sc.$eval(exp[1])},
 				function(newVal,oldVal) {
-					console.log("new val (repeater)");
-					elem.html("");
-					insertElements(newVal,template);
+					if(newVal !== oldVal){
+						console.log("new val (repeater)");
+						elem.html("");
+						insertElements(newVal,template);
+					}
 				}
 			);
 		}

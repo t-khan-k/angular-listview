@@ -10,9 +10,15 @@ angular.module('app').directive('listView',function($compile,$timeout){
 			var child = exp[0];
 			var data = scope.$eval(exp[1]);
 			var template = elem[0].innerHTML;
-			scope.listViewSrc = data.slice().slice(0,10);
+			scope.listViewSrc = data.slice();
 			appendRepeater(child,'listViewSrc');
-			var rowHeight = elem[0].lastChild.offsetHeight/scope.listViewSrc.length;
+			var rowHeight = Math.floor(elem[0].lastChild.offsetHeight/scope.listViewSrc.length);
+
+			var totalHeight = rowHeight * data.length;
+			var topHeight = 0;
+			var bottomHeight = 10;
+			elem.prepend(angular.element("<div class='virtual-container-top' style='height: "+topHeight+"px'></div>"));
+			elem.append(angular.element("<div class='virtual-container-bottom' style='height: "+bottomHeight+"px'></div>"));
 
 			scope.$watchCollection(function(sc) {return sc.$eval(exp[1])},
 				function(newVal,oldVal) {
@@ -22,11 +28,6 @@ angular.module('app').directive('listView',function($compile,$timeout){
 					}
 				}
 			);
-
-		/*	$timeout(function(){
-		console.log("timeout fire");
-		scope.listViewSrc.push({num: 6666});
-	},3000);*/
 
 			elem.on('scroll',function(){
 				var scrollTop = Math.ceil(elem[0].scrollTop) + 100;
@@ -38,15 +39,16 @@ angular.module('app').directive('listView',function($compile,$timeout){
 				scope.$apply(function(){
 					scope.listViewSrc = subArray.slice();
 				});
-				console.log(subArray);
-				//angular.element('.tk-repeater').css({"-webkit-transform":"translate(0px,"+scrollTop+"px)"});
+				var topHeight = firstIndex * rowHeight;
+				var bottomHeight = (data.length - lastIndex) * rowHeight;
+				console.log("top: ",Math.floor(topHeight),", bottom: ",Math.floor(bottomHeight));
+				angular.element('.virtual-container-top').css({height: topHeight});
+				angular.element('.virtual-container-bottom').css({height: bottomHeight});
 			});
 
 			function appendRepeater(child,data){
 				var tkRepeat = angular.element("<div class='tk-repeater' tk-repeat='"+child+" in "+data+"'></div>").html(template);
 				elem.append($compile(tkRepeat)(scope));
-				var totalHeight = elem[0].lastChild.offsetHeight * data.length;
-				angular.element('.tk-repeater').wrap("<div class='virtual-container' style='height:"+totalHeight+";width:1px;'></div>");
 			}
 		}
 	}
