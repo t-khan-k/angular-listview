@@ -1,7 +1,7 @@
 
-angular.module("app").controller('DemoController',[UsersController]);
+angular.module("app").controller('DemoController',['$timeout',UsersController]);
 
-function UsersController(){
+function UsersController($timeout){
 	var vm = this;
 	vm.list = getNumbers(100);
 
@@ -15,5 +15,13 @@ function UsersController(){
 
     vm.clicker = function(item,index){
         console.log("ctrl1: ",item," index:",index);
+    };
+
+    vm.push = function(){
+        vm.list.push({num: vm.list.length});
+    };
+
+    vm.unshift = function(){
+        vm.list.unshift({num: (vm.list[0].num - 1)});
     };
 }

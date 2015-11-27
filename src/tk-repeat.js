@@ -13,6 +13,7 @@
                 var child = exp[0];
                 var data = scope.$eval(exp[1]);
                 var template = elem[0].innerHTML;
+                elem[0].innerHTML = "";     // Clearing html template
                 insertElements(data, template);
                 var rowHeight;
 

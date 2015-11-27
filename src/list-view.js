@@ -1,86 +1,112 @@
 (function(){
     'use strict';
 
-    angular.module('app').directive('tkListView', function($compile){
+    angular.module('app').directive('tkListView', function($compile,$timeout){
         return{
             restrict: 'AE',
             scope: true,
             replace: false,
             link: function(scope, elem, attr){
-                var firstIndex = 0;
-                var lastIndex = 8;
-                scope.firstIndex = firstIndex;
-                var threshold = 2;
                 var clickHandler = attr.onClick || null;
                 clickHandler = scope.$eval(clickHandler);
+
+                // Margin, extra 2 rows on top and bottom
+                var threshold = 2;
+
+                var firstIndex = 0;
+
+                // Initially, populate 8 rows
+                var lastIndex = 8;
+
+                scope.firstIndex = firstIndex;
                 var exp = (attr.listView) ? attr.listView.split(' in ') : attr.src.split(' in ');
                 var child = exp[0];
-                var data = scope.$eval(exp[1]);
-                var template = elem[0].innerHTML;
-                scope.listViewSrc = data.slice(firstIndex, lastIndex);
 
-                appendTkRepeat(child, 'listViewSrc');
+                // Supplied list
+                var list = scope.$eval(exp[1]);
+
+                var template = elem[0].innerHTML;
+
+                // Clearing html template
+                elem[0].innerHTML = "";
+
+                // Initial rows from firstIndex to lastIndex
+                scope.listViewSrc = list.slice(firstIndex, lastIndex);
+
+                // Compile tkRepeat against scope and append
+                initializeTkRepeat(child, 'listViewSrc');
+
+                // Row height
                 var rowHeight = floor(elem[0].lastChild.offsetHeight / scope.listViewSrc.length);
 
-                /*lastIndex = elem[0].offsetHeight / rowHeight;
-                scope.listViewSrc = data.slice(firstIndex, lastIndex + 4);*/
-
+                // Append top and bottom virtual containers
                 appendVirtualContainers();
-                adjustVirtualContainers(firstIndex, lastIndex, rowHeight, data.length);
 
-                scope.$watchCollection(function(sc){
-                        return sc.$eval(exp[1])
-                    },
-                    function(newVal, oldVal){
-                        if(newVal !== oldVal){
-                            scope.listViewSrc = newVal;
-                        }
-                    }
-                );
+                // Set top and bottom containers height
+                adjustVirtualContainers(firstIndex, lastIndex, rowHeight, list.length);
 
+                // If viewport can carry more rows then add .. (initially 8 were added)
+                addMoreRows();
+
+                // Calculate what rows must appear on current viewport
+                // add/insert them
+                // adjust height of top and bottom virtual containers
+                // to make sure the new trimmed list would appear
+                // as it would on normal ng-repeat
                 elem.on('scroll', function(){
                     var firstIndex = ceil(elem[0].scrollTop / rowHeight) - threshold;
                     firstIndex = (firstIndex < 0) ? 0 : firstIndex;
-                    var lastIndex = firstIndex + ceil(elem[0].offsetHeight / rowHeight) + threshold;
+                    var lastIndex = firstIndex + carryCount() + threshold;
                     scope.$apply(function(){
-                        scope.listViewSrc = data.slice(firstIndex, lastIndex);
+                        scope.listViewSrc = list.slice(firstIndex, lastIndex);
                         scope.firstIndex = firstIndex;
                     });
-                    adjustVirtualContainers(firstIndex, lastIndex, rowHeight, data.length);
+                    adjustVirtualContainers(firstIndex, lastIndex, rowHeight, list.length);
                 });
 
-                function appendTkRepeat(child, data){
-                    var tkRepeat = angular.element(createTkRepeat(child,data))
+                function initializeTkRepeat(child, list){
+                    var tk = angular.element(tkRepeat(child,list))
                         .html(template)
                         .on('click',function(e){
                             var index = parseInt(e.target.id);          // Trimmed list index
                             var actualIndex = index + scope.firstIndex;
                             clickHandler(this.listViewSrc[index],actualIndex);
                         }.bind(scope));
-                    elem.append($compile(tkRepeat)(scope));
+                    elem.append($compile(tk)(scope));
                 }
 
                 function appendVirtualContainers(){
                     var topHeight = 0;
                     var bottomHeight = 0;
-                    elem.prepend(angular.element(createDiv("virtual-container-top",topHeight)));
-                    elem.append(angular.element(createDiv("virtual-container-bottom",bottomHeight)));
+                    elem.prepend(angular.element(div("virtual-container-top",topHeight)));
+                    elem.append(angular.element(div("virtual-container-bottom",bottomHeight)));
                 }
 
-                function adjustVirtualContainers(firstIndex, lastIndex, rowHeight, itemsLength){
+                function adjustVirtualContainers(firstIndex, lastIndex, rowHeight, listLength){
                     var topHeight = firstIndex * rowHeight;
-                    var bottomHeight = (itemsLength - lastIndex) * rowHeight;
-                    bottomHeight += 300;
+                    var bottomHeight = (listLength - lastIndex) * rowHeight;
+                    bottomHeight += 400;
                     angular.element('.virtual-container-top').css({height: topHeight});
                     angular.element('.virtual-container-bottom').css({height: bottomHeight});
                 }
 
-                function createDiv(className, topHeight){
+                function addMoreRows(){
+                    // Just to safely $apply
+                    $timeout(function(){
+                        scope.listViewSrc = list.slice(firstIndex, carryCount() + threshold);
+                    },0);
+                }
+
+                function carryCount(){
+                    return ceil(elem[0].offsetHeight / rowHeight);
+                }
+
+                function div(className, topHeight){
                     return "<div class='"+className+"' style='height: "+topHeight+"px'></div>";
                 }
 
-                function createTkRepeat(child, data){
-                    return "<div tk-repeat='"+child+" in "+data+"'></div>";
+                function tkRepeat(child, list){
+                    return "<div tk-repeat='"+child+" in "+list+"'></div>";
                 }
 
                 function floor(num){
@@ -90,6 +116,17 @@
                 function ceil(num){
                     return Math.ceil(num);
                 }
+
+                // Update tk-repeat on main list update
+                scope.$watchCollection(function(sc){
+                        return sc.$eval(exp[1])
+                    },
+                    function(newVal, oldVal){
+                        if(newVal !== oldVal){
+                            scope.listViewSrc = newVal;
+                        }
+                    }
+                );
             }
         }
     });
