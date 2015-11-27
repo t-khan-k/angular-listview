@@ -1,7 +1,7 @@
 
-angular.module("app").controller('UsersController',['$timeout',UsersController]);
+angular.module("app").controller('DemoController',[UsersController]);
 
-function UsersController($timeout){
+function UsersController(){
 	var vm = this;
 	vm.list = getNumbers(100);
 

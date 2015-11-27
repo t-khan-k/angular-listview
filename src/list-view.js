@@ -1,13 +1,13 @@
 (function(){
     'use strict';
 
-    angular.module('app').directive('listView',function($compile){
+    angular.module('app').directive('tkListView',function($compile){
         return{
             restrict: 'AE',
             scope:true,
             replace: false,
             link: function(scope,elem,attr){
-                var exp = (attr.listView)? attr.listView.split(' in ') : attr.repeater.split(' in ');
+                var exp = (attr.listView)? attr.listView.split(' in ') : attr.src.split(' in ');
                 var child = exp[0];
                 var data = scope.$eval(exp[1]);
                 var template = elem[0].innerHTML;
