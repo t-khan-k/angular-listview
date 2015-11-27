@@ -27,6 +27,14 @@ angular.module('app').directive('tkRepeat',function($compile){
 				cs[child] = row;
 				return cs;
 			}
+
+			scope.$watchCollection(function(sc) {return sc.$eval(exp[1])},
+				function(newVal,oldVal) {
+					console.log("new val (repeater)");
+					elem.html("");
+					insertElements(newVal,template);
+				}
+			);
 		}
 	}
 });
