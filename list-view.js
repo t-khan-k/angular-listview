@@ -1,27 +1,26 @@
 
-angular.module('app').directive('listView',function($compile,$timeout){
+angular.module('app').directive('listView',function($compile){
 	return{
-		restrict: 'E',
+		restrict: 'AE',
 		scope:true,
 		replace: false,
 		link: function(scope,elem,attr){
-
-			var exp = attr.repeater.split(' in ');
+			var exp = (attr.listView)? attr.listView.split(' in ') : attr.repeater.split(' in ');
 			var child = exp[0];
 			var data = scope.$eval(exp[1]);
 			var template = elem[0].innerHTML;
-			scope.listViewSrc = data.slice();
-			appendRepeater(child,'listViewSrc');
+			scope.listViewSrc = data.slice().slice(0,8);
+			var threshold = 2;
+
+			appendTkRepeat(child,'listViewSrc');
 			var rowHeight = Math.floor(elem[0].lastChild.offsetHeight/scope.listViewSrc.length);
+			appendVirtualContainers();
+			adjustVirtualContainers(0,8,rowHeight,data.length);
 
-			var totalHeight = rowHeight * data.length;
-			var topHeight = 0;
-			var bottomHeight = 10;
-			elem.prepend(angular.element("<div class='virtual-container-top' style='height: "+topHeight+"px'></div>"));
-			elem.append(angular.element("<div class='virtual-container-bottom' style='height: "+bottomHeight+"px'></div>"));
-
-			scope.$watchCollection(function(sc) {return sc.$eval(exp[1])},
-				function(newVal,oldVal) {
+			scope.$watchCollection(function(sc){
+					return sc.$eval(exp[1])
+				},
+				function(newVal,oldVal){
 					if(newVal !== oldVal){
 						console.log("new val (list-view)");
 						scope.listViewSrc = newVal;
@@ -30,25 +29,38 @@ angular.module('app').directive('listView',function($compile,$timeout){
 			);
 
 			elem.on('scroll',function(){
-				var scrollTop = Math.ceil(elem[0].scrollTop) + 100;
-				var threshold = 2;
-				var firstIndex = Math.ceil(elem[0].scrollTop/rowHeight) - threshold;
+				var firstIndex = ceil(elem[0].scrollTop/rowHeight) - threshold;
 				firstIndex = (firstIndex < 0)? 0 : firstIndex;
-				var lastIndex = firstIndex + Math.ceil(elem[0].offsetHeight/rowHeight) + threshold - 1;
+				var lastIndex = firstIndex + ceil(elem[0].offsetHeight/rowHeight) + threshold - 1;
 				var subArray = data.slice(firstIndex,lastIndex + 1);
 				scope.$apply(function(){
 					scope.listViewSrc = subArray.slice();
 				});
-				var topHeight = firstIndex * rowHeight;
-				var bottomHeight = (data.length - lastIndex) * rowHeight;
-				console.log("top: ",Math.floor(topHeight),", bottom: ",Math.floor(bottomHeight));
-				angular.element('.virtual-container-top').css({height: topHeight});
-				angular.element('.virtual-container-bottom').css({height: bottomHeight});
+				adjustVirtualContainers(firstIndex,lastIndex,rowHeight,data.length);
 			});
 
-			function appendRepeater(child,data){
-				var tkRepeat = angular.element("<div class='tk-repeater' tk-repeat='"+child+" in "+data+"'></div>").html(template);
+			function appendTkRepeat(child,data){
+				var tkRepeat = angular.element("<div tk-repeat='"+child+" in "+data+"'></div>").html(template);
 				elem.append($compile(tkRepeat)(scope));
+			}
+
+			function appendVirtualContainers(){
+				var topHeight = 0;
+				var bottomHeight = 10;
+				elem.prepend(angular.element("<div class='virtual-container-top' style='height: "+topHeight+"px'></div>"));
+				elem.append(angular.element("<div class='virtual-container-bottom' style='height: "+bottomHeight+"px'></div>"));
+			}
+
+			function adjustVirtualContainers(firstIndex,lastIndex,rowHeight,itemsLength){
+				var topHeight = firstIndex * rowHeight;
+				var bottomHeight = (itemsLength - lastIndex) * rowHeight;
+				bottomHeight += 300;
+				angular.element('.virtual-container-top').css({height: topHeight});
+				angular.element('.virtual-container-bottom').css({height: bottomHeight});
+			}
+
+			function ceil(num){
+				return Math.ceil(num);
 			}
 		}
 	}

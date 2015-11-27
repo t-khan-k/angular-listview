@@ -5,7 +5,6 @@ angular.module('app').directive('tkRepeat',function($compile){
 		scope:true,
 		replace: false,
 		link: function(scope,elem,attr){
-
 			var exp = attr.tkRepeat.split(' in ');
 			var child = exp[0];
 			var data = scope.$eval(exp[1]);
@@ -31,7 +30,6 @@ angular.module('app').directive('tkRepeat',function($compile){
 			scope.$watchCollection(function(sc) {return sc.$eval(exp[1])},
 				function(newVal,oldVal) {
 					if(newVal !== oldVal){
-						console.log("new val (repeater)");
 						elem.html("");
 						insertElements(newVal,template);
 					}
