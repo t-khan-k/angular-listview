@@ -14,7 +14,8 @@ function UsersController($timeout){
 	}
 
     vm.clicker = function(item,index){
-        console.log("ctrl1: ",item," index:",index);
+        console.log("index: "+index+", value: "+item.num);
+        alert("index: "+index+", value: "+item.num);
     };
 
     vm.push = function(){
