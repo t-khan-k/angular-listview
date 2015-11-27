@@ -12,4 +12,8 @@ function UsersController(){
 		}
 		return arr;
 	}
+
+    vm.clicker = function(item,index){
+        console.log("ctrl1: ",item," index:",index);
+    };
 }

@@ -19,9 +19,9 @@
 <script src="../../src/list-view.js"></script>
 <script src="../../src/tk-repeat.js"></script>
 <body>
-<tk-list-view class="tk-list-view" src="l in vm.list">
+<tk-list-view class="tk-list-view" src="l in vm.list" on-click="vm.clicker">
     <div style="padding: 25px;">
-		{{l.num}}
+		{{l.num}}  (index {{$index}})
 	</div>
 </tk-list-view>
 </body>

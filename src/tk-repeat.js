@@ -7,6 +7,8 @@
             scope: true,
             replace: false,
             link: function(scope, elem, attr){
+                //var clickHandler = attr.ngClick;
+                //scope.clickHandler = scope.$eval(clickHandler);
                 var exp = attr.tkRepeat.split(' in ');
                 var child = exp[0];
                 var data = scope.$eval(exp[1]);
@@ -16,16 +18,17 @@
 
                 function insertElements(data, template){
                     for(var i = 0, len = data.length; i < len; i++){
-                        var el = angular.element(template);
-                        var childScope = createChildScope(child, data[i]);
+                        var el = angular.element(template).attr("id",i);
+                        var childScope = createChildScope(child, data[i], i + scope.firstIndex);
                         elem.append($compile(el)(childScope));
                         rowHeight = el[0].offsetHeight;
                     }
                 }
 
-                function createChildScope(child, row){
+                function createChildScope(child, row, i){
                     var cs = scope.$new();
                     cs[child] = row;
+                    cs.$index = i;
                     return cs;
                 }
 
