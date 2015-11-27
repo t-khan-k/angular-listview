@@ -12,9 +12,4 @@ function UsersController($timeout){
 		}
 		return arr;
 	}
-
-	/*$timeout(function(){
-		console.log("timeout fire");
-		vm.list.push({num: 1999});
-	},3000);*/
 }

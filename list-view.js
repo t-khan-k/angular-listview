@@ -22,7 +22,6 @@ angular.module('app').directive('listView',function($compile){
 				},
 				function(newVal,oldVal){
 					if(newVal !== oldVal){
-						console.log("new val (list-view)");
 						scope.listViewSrc = newVal;
 					}
 				}
