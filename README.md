@@ -15,7 +15,7 @@ https://material.angularjs.org/latest/demo/virtualRepeat
 ## Usage
 ````html
 <div ng-app="app" ng-controller="DemoController as vm">
-  <div tk-list-view="item in list" on-click="vm.itemClick">
+  <div tk-list-view="item in vm.list" on-click="vm.itemClick">
     number: {{item.num}} , index: {{$index}}
   </div>
 </div>
@@ -36,7 +36,7 @@ function UsersController(){
 
 also, can be used as an element
 ````html
-<tk-list-view="item in list" on-click="vm.itemClick"></tk-list-view>
+<tk-list-view="item in vm.list" on-click="vm.itemClick"></tk-list-view>
 ````
 
 #License
