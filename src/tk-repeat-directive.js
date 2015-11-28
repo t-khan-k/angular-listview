@@ -1,12 +1,13 @@
 (function(){
     'use strict';
 
-    angular.module('app').directive('tkRepeat', function($compile){
+    angular.module('tk-repeat').directive('tkRepeat', function($compile){
         return{
             restrict: 'A',
             scope: true,
             replace: false,
             link: function(scope, elem, attr){
+                var rowHeight;
                 var exp = attr.tkRepeat.split(' in ');
                 var child = exp[0];
                 var list = scope.$eval(exp[1]);
@@ -17,8 +18,6 @@
                 
                 // Inserting all rows
                 insertRows(list, template);
-
-                var rowHeight;
 
                 function insertRows(list, template){
                     for(var i = 0, len = list.length; i < len; i++){
@@ -43,7 +42,7 @@
 
                 // Reinsert rows on list update
                 scope.$watchCollection(function(sc){
-                        return sc.$eval(exp[1])
+                        return sc.$eval(exp[1]);
                     },
                     function(newVal, oldVal){
                         if(newVal !== oldVal){

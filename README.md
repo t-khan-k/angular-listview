@@ -1,4 +1,4 @@
-# tk-list-view
+# angular-listview
 
 ## Description
 Minimalistic load-on-demand behaviour ListView control for AngularJS. Tried to mimic the ListView controls we have in XML/XAML. It uses custom directive for repeating elements instead of ng-repeat, which may be faster than ng-repeat (performance test needed). The concept is to only have those items in DOM that are currently on the viewport. So in case of 100 or 100k elements in an array, it only add those items in DOM that can be seen.

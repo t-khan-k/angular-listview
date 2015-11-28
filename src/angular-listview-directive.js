@@ -1,7 +1,7 @@
 (function(){
     'use strict';
 
-    angular.module('app').directive('tkListView', function($compile,$timeout){
+    angular.module('angular-listview').directive('angularListview', function($compile,$timeout){
         return{
             restrict: 'AE',
             scope: true,
@@ -33,26 +33,20 @@
                 // Initial rows from firstIndex to lastIndex
                 scope.listViewSrc = list.slice(firstIndex, lastIndex);
 
-                // Compile tkRepeat against scope and append
                 initializeTkRepeat(child, 'listViewSrc');
 
                 // Row height
                 var rowHeight = floor(elem[0].lastChild.offsetHeight / scope.listViewSrc.length);
 
-                // Append top and bottom virtual containers
                 appendVirtualContainers();
-
-                // Set top and bottom containers height
                 adjustVirtualContainers(firstIndex, lastIndex, rowHeight, list.length);
-
-                // If viewport can carry more rows then add .. (initially 8 were added)
                 addMoreRows();
 
                 // Calculate what rows must appear on current viewport
                 // add/insert them
                 // adjust height of top and bottom virtual containers
                 // to make sure the new trimmed list would appear
-                // as it would on normal ng-repeat
+                // on the specific scroll position as it would on normal lists
                 elem.on('scroll', function(){
                     var firstIndex = ceil(elem[0].scrollTop / rowHeight) - threshold;
                     firstIndex = (firstIndex < 0) ? 0 : firstIndex;
@@ -64,17 +58,25 @@
                     adjustVirtualContainers(firstIndex, lastIndex, rowHeight, list.length);
                 });
 
+                // Compile and append tk-repeat directive
+                // tk-repeat is used instead of ng-repeat
                 function initializeTkRepeat(child, list){
                     var tk = angular.element(tkRepeat(child,list))
                         .html(template)
-                        .on('click',function(e){
-                            var index = parseInt(e.target.id);          // Trimmed list index
-                            var actualIndex = index + scope.firstIndex;
-                            clickHandler(this.listViewSrc[index],actualIndex);
-                        }.bind(scope));
+                        .on('click',itemClick);
                     elem.append($compile(tk)(scope));
                 }
 
+                // tk-repeat item/row click
+                function itemClick(e){
+                    // Trimmed list index
+                    var index = parseInt(e.target.id);
+
+                    var actualIndex = index + scope.firstIndex;
+                    clickHandler(scope.listViewSrc[index],actualIndex);
+                }
+
+                // Append top and bottom virtual containers
                 function appendVirtualContainers(){
                     var topHeight = 0;
                     var bottomHeight = 0;
@@ -82,14 +84,16 @@
                     elem.append(angular.element(div("virtual-container-bottom",bottomHeight)));
                 }
 
+                // Set top and bottom containers height
                 function adjustVirtualContainers(firstIndex, lastIndex, rowHeight, listLength){
                     var topHeight = firstIndex * rowHeight;
                     var bottomHeight = (listLength - lastIndex) * rowHeight;
-                    bottomHeight += 400;
+                    bottomHeight += 300;
                     angular.element('.virtual-container-top').css({height: topHeight});
                     angular.element('.virtual-container-bottom').css({height: bottomHeight});
                 }
 
+                // If viewport can carry more rows then add .. (initially 8 were added)
                 function addMoreRows(){
                     // Just to safely $apply
                     $timeout(function(){
@@ -97,6 +101,7 @@
                     },0);
                 }
 
+                // Returns number of rows that can be rendered in the parent container
                 function carryCount(){
                     return ceil(elem[0].offsetHeight / rowHeight);
                 }
@@ -119,7 +124,7 @@
 
                 // Update tk-repeat on main list update
                 scope.$watchCollection(function(sc){
-                        return sc.$eval(exp[1])
+                        return sc.$eval(exp[1]);
                     },
                     function(newVal, oldVal){
                         if(newVal !== oldVal){
