@@ -1,11 +1,11 @@
 # tk-list-view
 
 ## Description
-Minimalistic ListView control for AngularJS. Tried to mimic the ListView controls we have in XML/XAML. It uses custom directive for repeating elements instead of ng-repeat, which may be faster than ng-repeat (performance test needed). on-demand-loading is builtin in the list-view control, the concept is to only have those items in DOM that are currently on the viewport. So in case of 100 or 100k elements in an array it only add those items in DOM that can be seen.\n
+Minimalistic ListView control for AngularJS. Tried to mimic the ListView controls we have in XML/XAML. It uses custom directive for repeating elements instead of ng-repeat, which may be faster than ng-repeat (performance test needed). Builtin load-on-demand behaviour is implemented in control. The concept is to only have those items in DOM that are currently on the viewport. So in case of 100 or 100k elements in an array it only add those items in DOM that can be seen.\n
 
 Features include:<br/>
-1. on-demand-loading of items.<br/>
-2. Click event.
+1. load-on-demand behaviour<br/>
+2. Click event
 
 Plan to add more options and feautres in coming days.
 
