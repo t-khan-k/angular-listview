@@ -22,7 +22,8 @@ https://material.angularjs.org/latest/demo/virtualRepeat
 ````
 
 ````javascript
-angular.module("app").controller('DemoController', [UsersController]);
+var app = angular.module("app", [ 'angular-listview' ]);
+app.controller('DemoController', [UsersController]);
 
 function UsersController(){
     var vm = this;
