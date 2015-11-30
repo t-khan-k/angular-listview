@@ -12,6 +12,9 @@ Plan to add more options and feautres in coming days.
 Idea taken from Angular Material Virtual Repeat
 https://material.angularjs.org/latest/demo/virtualRepeat
 
+## Live DEMO
+https://rawgit.com/t-khan-k/angular-listview/master/examples/basic/index.html
+
 ## Usage
 ````html
 <div ng-app="app" ng-controller="DemoController as vm">
