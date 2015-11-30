@@ -18,7 +18,7 @@ https://goo.gl/8we8bz
 ## Usage
 ````html
 <div ng-app="app" ng-controller="DemoController as vm">
-  <div tk-list-view="item in vm.list" on-click="vm.itemClick">
+  <div angular-listview="item in vm.list" on-click="vm.itemClick">
     number: {{item.num}} , index: {{$index}}
   </div>
 </div>
@@ -40,7 +40,7 @@ function UsersController(){
 
 also, can be used as an element
 ````html
-<tk-list-view="item in vm.list" on-click="vm.itemClick"></tk-list-view>
+<angular-listview="item in vm.list" on-click="vm.itemClick"></angular-listview>
 ````
 
 #License
