@@ -13,7 +13,7 @@ Idea taken from Angular Material Virtual Repeat
 https://material.angularjs.org/latest/demo/virtualRepeat
 
 ## Live DEMO
-https://rawgit.com/t-khan-k/angular-listview/master/examples/basic/index.html
+https://goo.gl/8we8bz
 
 ## Usage
 ````html
