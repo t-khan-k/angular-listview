@@ -7,8 +7,13 @@
             scope: true,
             replace: false,
             link: function(scope, elem, attr){
-                var clickHandler = attr.onClick || null;
-                clickHandler = scope.$eval(clickHandler);
+		            var clickHandler = attr.onClick || null;
+		            if(clickHandler){
+                    clickHandler = scope.$eval(clickHandler);
+                }
+
+                // tk-repeat
+                var tkRepeatElem;
 
                 // Margin, extra 2 rows on top and bottom
                 var threshold = 2;
@@ -61,10 +66,12 @@
                 // Compile and append tk-repeat directive
                 // tk-repeat is used instead of ng-repeat
                 function initializeTkRepeat(child, list){
-                    var tk = angular.element(tkRepeat(child,list))
-                        .html(template)
-                        .on('click',itemClick);
-                    elem.append($compile(tk)(scope));
+                    tkRepeatElem = angular.element(tkRepeat(child,list))
+                        .html(template);
+		                if(clickHandler){
+			                tkRepeatElem.on('click',itemClick);
+		                }
+                    elem.append($compile(tkRepeatElem)(scope));
                 }
 
                 // tk-repeat item/row click
@@ -132,6 +139,12 @@
                         }
                     }
                 );
+
+	            // Removing all handlers
+	            scope.$on('$destroy',function(){
+		            tkRepeatElem.off();
+		            elem.off();
+	            });
             }
         }
     });

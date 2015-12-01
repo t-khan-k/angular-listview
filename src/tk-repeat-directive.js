@@ -51,6 +51,10 @@
                         }
                     }
                 );
+
+	              scope.$on('$destroy',function(){
+		              elem.off();
+	              });
             }
         }
     });
