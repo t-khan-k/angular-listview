@@ -1,16 +1,17 @@
 <!DOCTYPE html>
 <html ng-app="app" ng-controller="DemoController as vm">
 <head lang="en">
-    <meta charset="UTF-8">
+	<meta charset="UTF-8">
 </head>
 <style>
-    .tk-list-view {
-        background: gray;
-        display: block;
-        height: 300px;
-        width: 250px;
-        overflow: auto;
-    }
+	.tk-list-view {
+		display: block;
+		height: 300px;
+		width: 250px;
+		overflow: auto;
+		border-color: lightgray;
+		border-width: 1px;
+	}
 </style>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.0.0-alpha1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.6/angular.min.js"></script>
@@ -21,12 +22,15 @@
 <script src="../../src/tk-repeat-module.js"></script>
 <script src="../../src/tk-repeat-directive.js"></script>
 <body>
-<button ng-click="vm.unshift()">unshift to list</button>
-<button ng-click="vm.push()">push to list</button>
+<!--<button ng-click="vm.unshift()">unshift to list</button>
+<button ng-click="vm.push()">push to list</button>-->
+<h2>List view length {{vm.numberOfItems}}</h2>
+<h3>But only 6 or 7 items in DOM</h3>
+<br>
 <angular-listview class="tk-list-view" src="item in vm.list" on-click="vm.clicker">
-    <div style="padding: 25px;">
-        {{item.num}} (index {{$index}})
-    </div>
+	<div style="padding: 25px;border-bottom: solid;border-width: 1px;border-color: lightgray">
+		{{item.num}}
+	</div>
 </angular-listview>
 </body>
 </html>
